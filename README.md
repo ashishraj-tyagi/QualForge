@@ -155,7 +155,7 @@ Without a key, `generate` writes a deterministic offline stub so the pipeline st
 | Project | Role |
 |---------|------|
 | [StockRoom](https://github.com/ashishraj-tyagi/StockRoom) | Application under test (auth, cart, orders, admin, OpenAPI) |
-| RestAssured-BDD (sibling) | Execution + reporting layer (`npm run test:api`) |
+| [RestAssured-BDD](https://github.com/ashishraj-tyagi/RestAssured-BDD) | Execution + reporting layer (`npm run test:api`) |
 | **[QualForge](https://github.com/ashishraj-tyagi/QualForge)** | AI-assisted design + quality gates |
 
 ## Project layout
