@@ -1,11 +1,11 @@
 # QualForge
 
 > AI-assisted test design with **human-in-the-loop guardrails**, executed against
-> [StockRoom](../StockRoom) in CI.
+> [StockRoom](https://github.com/ashishraj-tyagi/StockRoom) in CI.
 
-[![CI](https://img.shields.io/badge/CI-guardrails-blue)](.github/workflows/ci.yml)
-· [StockRoom AUT](../StockRoom)
-· [RestAssured-BDD](../RestAssured-BDD)
+[![QualForge CI](https://github.com/ashishraj-tyagi/QualForge/actions/workflows/ci.yml/badge.svg)](https://github.com/ashishraj-tyagi/QualForge/actions/workflows/ci.yml)
+· [StockRoom AUT](https://github.com/ashishraj-tyagi/StockRoom)
+· [Repo](https://github.com/ashishraj-tyagi/QualForge)
 
 ## Why this exists
 
@@ -96,8 +96,6 @@ and embeds a Bearer token pattern — both fail closed. That failure is the poin
 
 Workflow: [.github/workflows/ci.yml](.github/workflows/ci.yml)
 
-![CI](https://github.com/ashishraj-tyagi/QualForge/actions/workflows/ci.yml/badge.svg)
-
 ## LLM generation
 
 ```bash
@@ -116,9 +114,9 @@ Without a key, `generate` writes a deterministic offline stub so the pipeline st
 
 | Project | Role |
 |---------|------|
-| [StockRoom](../StockRoom) | Application under test (auth, cart, orders, admin, OpenAPI) |
-| [RestAssured-BDD](../RestAssured-BDD) | Execution + reporting layer |
-| **QualForge** | AI-assisted design + quality gates |
+| [StockRoom](https://github.com/ashishraj-tyagi/StockRoom) | Application under test (auth, cart, orders, admin, OpenAPI) |
+| RestAssured-BDD (sibling) | Execution + reporting layer (`npm run test:api`) |
+| **[QualForge](https://github.com/ashishraj-tyagi/QualForge)** | AI-assisted design + quality gates |
 
 ## Project layout
 
