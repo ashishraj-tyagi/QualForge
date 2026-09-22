@@ -110,9 +110,10 @@ and embeds a Bearer token pattern — both fail closed. That failure is the poin
 
 ## CI
 
-- **PR / push:** guardrails on `approved/` + contract diff + release summary
-- **API smoke:** when `STOCKROOM_BASE_URL` is set — smoke, explore, Allure generate
-- **Pages (main):** publishes quality dashboard + Allure to GitHub Pages
+- **PR / push:** guardrails on `approved/` + contract diff + release summary + smoke
+- **Scheduled (3× daily):** StockRoom smoke only — restores prior run history, updates dashboard/Allure on Pages (≈ 09:00 / 13:00 / 18:00 AEST)
+- **API smoke:** when `STOCKROOM_BASE_URL` is set — smoke (+ explore on non-schedule), Allure generate
+- **Pages:** publishes quality dashboard, Allure, and accumulated `history/` for flaky clustering
 - **Local RestAssured:** `npm run test:api`
 
 ### Wire Vercel AUT smoke (once)

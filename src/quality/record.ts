@@ -33,10 +33,14 @@ export function saveRun(
     resolve("artifacts/last-run.json"),
     JSON.stringify(record, null, 2) + "\n",
   );
+  const removed = pruneHistory();
+  if (removed > 0) {
+    console.log(`Pruned ${removed} old history file(s); kept newest runs`);
+  }
   return record;
 }
 
-export function loadRuns(limit = 50): RunRecord[] {
+export function loadRuns(limit = 100): RunRecord[] {
   const dir = historyDir();
   if (!existsSync(dir)) return [];
   const files = readdirSync(dir)
@@ -47,6 +51,21 @@ export function loadRuns(limit = 50): RunRecord[] {
   return files.map(
     (f) => JSON.parse(readFileSync(resolve(dir, f), "utf8")) as RunRecord,
   );
+}
+
+/** Keep the newest N history files (default ~30 days at 3 runs/day). */
+export function pruneHistory(keep = Number(process.env.HISTORY_KEEP ?? 90)): number {
+  const dir = historyDir();
+  const files = readdirSync(dir)
+    .filter((f) => f.endsWith(".json"))
+    .sort()
+    .reverse();
+  let removed = 0;
+  for (const f of files.slice(Math.max(keep, 1))) {
+    unlinkSync(resolve(dir, f));
+    removed += 1;
+  }
+  return removed;
 }
 
 export function writeAllureResults(
