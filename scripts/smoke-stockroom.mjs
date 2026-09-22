@@ -56,7 +56,15 @@ async function main() {
   console.log(`StockRoom smoke → ${base}`);
 
   await check("GET /api/health → 200", async () => {
-    const res = await fetch(`${base}/api/health`, { headers: headers() });
+    const res = await fetch(`${base}/api/health`, {
+      headers: headers(),
+      redirect: "manual",
+    });
+    if (res.status === 301 || res.status === 302 || res.status === 307) {
+      throw new Error(
+        `got ${res.status} redirect (Vercel auth?). Set VERCEL_AUTOMATION_BYPASS_SECRET`,
+      );
+    }
     if (!res.ok) throw new Error(`status ${res.status}`);
   });
 

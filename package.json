@@ -12,6 +12,7 @@
     "approve": "tsx src/review/approve.ts",
     "summarize": "tsx src/summarize/release.ts",
     "sync:features": "node scripts/sync-features.mjs",
+    "setup:ci-env": "bash scripts/setup-github-ci-env.sh",
     "pipeline:draft": "npm run ingest && npm run generate && npm run guardrails",
     "test:api": "node scripts/run-api-tests.mjs",
     "test:smoke": "node scripts/smoke-stockroom.mjs",

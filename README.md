@@ -94,6 +94,25 @@ and embeds a Bearer token pattern — both fail closed. That failure is the poin
 - **API smoke (optional):** when repo Variable `STOCKROOM_BASE_URL` is set — `npm run test:smoke`
 - **Local RestAssured:** `npm run test:api` syncs `approved/` and runs the Java suite
 
+### Wire Vercel AUT smoke (once)
+
+1. In Vercel: **StockRoom project → Settings → Deployment Protection → Protection Bypass for Automation** — copy the secret.
+2. In `QualForge/.env`:
+
+```bash
+STOCKROOM_BASE_URL=https://stock-room-ashishraj-tyagi.vercel.app
+VERCEL_AUTOMATION_BYPASS_SECRET=paste-secret-here
+```
+
+3. Push Variable + Secret to GitHub Actions:
+
+```bash
+chmod +x scripts/setup-github-ci-env.sh
+./scripts/setup-github-ci-env.sh
+```
+
+4. Confirm: Actions → QualForge CI → **StockRoom API smoke** runs on the next push (or `gh workflow run "QualForge CI"`).
+
 Workflow: [.github/workflows/ci.yml](.github/workflows/ci.yml)
 
 ## LLM generation
