@@ -5,8 +5,16 @@
 
 [![QualForge CI](https://github.com/ashishraj-tyagi/QualForge/actions/workflows/ci.yml/badge.svg)](https://github.com/ashishraj-tyagi/QualForge/actions/workflows/ci.yml)
 · [StockRoom AUT](https://github.com/ashishraj-tyagi/StockRoom)
-· [Repo](https://github.com/ashishraj-tyagi/QualForge)
-· [Dashboard / Allure](https://ashishraj-tyagi.github.io/QualForge/)
+· [RestAssured-BDD](https://github.com/ashishraj-tyagi/RestAssured-BDD)
+
+### Live quality reports
+
+| Report | Link |
+|--------|------|
+| **Quality dashboard** (flaky clustering, latest runs) | https://ashishraj-tyagi.github.io/QualForge/ |
+| **Allure** (latest smoke) | https://ashishraj-tyagi.github.io/QualForge/allure/ |
+
+Also linked from this repo’s GitHub **About → Website** field.
 
 ## Why this exists
 
