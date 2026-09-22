@@ -1,0 +1,52 @@
+name: QualForge CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+  schedule:
+    - cron: "0 14 * * *"
+  workflow_dispatch:
+
+jobs:
+  guardrails-approved:
+    name: Guardrails (approved only)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Install
+        run: npm install
+      - name: Guardrails on approved/
+        run: npm run guardrails -- approved
+      - name: Summarize
+        run: npm run summarize
+      - name: Upload summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-summary
+          path: artifacts/last-summary.md
+
+  api-smoke:
+    name: StockRoom API smoke
+    needs: guardrails-approved
+    runs-on: ubuntu-latest
+    # Set repo Variable STOCKROOM_BASE_URL (e.g. Vercel AUT URL).
+    # Set secret VERCEL_AUTOMATION_BYPASS_SECRET when the AUT is protection-gated.
+    if: ${{ vars.STOCKROOM_BASE_URL != '' }}
+    env:
+      STOCKROOM_BASE_URL: ${{ vars.STOCKROOM_BASE_URL }}
+      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Install
+        run: npm install
+      - name: Smoke (mirrors approved Gherkin)
+        run: npm run test:smoke

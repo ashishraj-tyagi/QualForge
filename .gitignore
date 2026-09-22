@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+.env.local
+artifacts/openapi.json
+artifacts/last-summary.md
+*.log
+.DS_Store
+.allure/
+target/

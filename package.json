@@ -1,0 +1,28 @@
+{
+  "name": "qualforge",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI-assisted test design with human-in-the-loop guardrails, executed against StockRoom in CI",
+  "type": "module",
+  "scripts": {
+    "ingest": "tsx src/ingest/openapi.ts",
+    "generate": "tsx src/generate/llm.ts",
+    "guardrails": "tsx src/guardrails/index.ts",
+    "review:list": "tsx src/review/list.ts",
+    "approve": "tsx src/review/approve.ts",
+    "summarize": "tsx src/summarize/release.ts",
+    "sync:features": "node scripts/sync-features.mjs",
+    "pipeline:draft": "npm run ingest && npm run generate && npm run guardrails",
+    "test:api": "node scripts/run-api-tests.mjs",
+    "test:smoke": "node scripts/smoke-stockroom.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "StockRoom API",
+    "version": "1.0.0",
+    "description": "Committed snapshot for offline guardrails demos. Refresh with `npm run ingest` against a live StockRoom."
+  },
+  "paths": {
+    "/api/health": {
+      "get": { "summary": "Health check" }
+    },
+    "/api/auth": {
+      "post": { "summary": "Login" },
+      "get": { "summary": "Current user" },
+      "delete": { "summary": "Logout" }
+    },
+    "/api/products": {
+      "get": { "summary": "List products" },
+      "post": { "summary": "Create product (admin)" }
+    },
+    "/api/products/{id}": {
+      "get": { "summary": "Get product" },
+      "patch": { "summary": "Update product (admin)" },
+      "delete": { "summary": "Delete product (admin)" }
+    },
+    "/api/cart": {
+      "get": { "summary": "Get cart" },
+      "put": { "summary": "Upsert cart line" },
+      "delete": { "summary": "Clear cart" }
+    },
+    "/api/orders": {
+      "get": { "summary": "List orders" },
+      "post": { "summary": "Place order" }
+    },
+    "/api/openapi": {
+      "get": { "summary": "OpenAPI document" }
+    },
+    "/api/test/reset": {
+      "post": { "summary": "Reset seed data" }
+    }
+  }
+}
