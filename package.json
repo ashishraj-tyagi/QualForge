@@ -1,6 +1,6 @@
 {
   "name": "qualforge",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "AI-assisted test design with human-in-the-loop guardrails, executed against StockRoom in CI",
   "type": "module",
@@ -15,7 +15,12 @@
     "setup:ci-env": "bash scripts/setup-github-ci-env.sh",
     "pipeline:draft": "npm run ingest && npm run generate && npm run guardrails",
     "test:api": "node scripts/run-api-tests.mjs",
-    "test:smoke": "node scripts/smoke-stockroom.mjs",
+    "test:smoke": "tsx scripts/smoke-stockroom.ts",
+    "dashboard": "tsx src/quality/cli.ts",
+    "explore": "tsx src/explore/agent.ts",
+    "contract:diff": "tsx src/contract/diff.ts",
+    "allure:generate": "npx --yes allure-commandline@2.46.1 generate allure-results -o allure-report --clean",
+    "allure:open": "npx --yes allure-commandline@2.46.1 open allure-report",
     "typecheck": "tsc --noEmit"
   },
   "engines": {

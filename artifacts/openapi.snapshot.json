@@ -32,9 +32,6 @@
       "get": { "summary": "List orders" },
       "post": { "summary": "Place order" }
     },
-    "/api/openapi": {
-      "get": { "summary": "OpenAPI document" }
-    },
     "/api/test/reset": {
       "post": { "summary": "Reset seed data" }
     }

@@ -4,6 +4,17 @@ dist/
 .env.local
 artifacts/openapi.json
 artifacts/last-summary.md
+artifacts/last-run.json
+artifacts/dashboard.html
+artifacts/quality-report.json
+artifacts/explore-report.json
+artifacts/explore-report.md
+artifacts/openapi-diff.json
+artifacts/openapi-diff.md
+artifacts/history/
+artifacts/pacts/
+allure-results/
+allure-report/
 *.log
 .DS_Store
 .allure/

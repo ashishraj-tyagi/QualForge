@@ -6,6 +6,7 @@
 [![QualForge CI](https://github.com/ashishraj-tyagi/QualForge/actions/workflows/ci.yml/badge.svg)](https://github.com/ashishraj-tyagi/QualForge/actions/workflows/ci.yml)
 · [StockRoom AUT](https://github.com/ashishraj-tyagi/StockRoom)
 · [Repo](https://github.com/ashishraj-tyagi/QualForge)
+· [Dashboard / Allure](https://ashishraj-tyagi.github.io/QualForge/)
 
 ## Why this exists
 
@@ -21,13 +22,19 @@ human review → automate → report.
 - API automation path via RestAssured-BDD + Allure against a purpose-built AUT
 - GitHub Actions checks on `approved/` only
 - AI used for **drafting and summarizing**, not unsupervised merge
+- Quality dashboard with **flaky clustering**
+- **Bounded exploratory agent** (step + time caps, OpenAPI allowlist)
+- **OpenAPI / Pact-style contract diff** on change
+- **Live Allure + dashboard** published from Actions to GitHub Pages
 
 ## Architecture
 
 ```text
 StockRoom OpenAPI → generate (LLM/stub) → drafts/
         → guardrails → human approve → approved/
-        → CI / RestAssured-BDD → Allure → summarize
+        → CI smoke / RestAssured / explore
+        → history → dashboard + Allure (GitHub Pages)
+        → contract:diff (snapshot vs live) + Pact stub
 ```
 
 See [docs/architecture.md](docs/architecture.md).
@@ -37,7 +44,7 @@ See [docs/architecture.md](docs/architecture.md).
 ### Prerequisites
 
 - Node 20+
-- Java 17+ / Maven (when running `npm run test:api` against RestAssured-BDD)
+- Java 17+ (Allure CLI generate in CI; Maven for RestAssured locally)
 - StockRoom running locally **or** use the committed `artifacts/openapi.snapshot.json`
 - Optional: `LLM_API_KEY` for live generation (otherwise offline stub drafts)
 
@@ -61,7 +68,11 @@ npm run guardrails -- approved
 npm run summarize       # artifacts/last-summary.md
 npm run sync:features   # copy approved/ → RestAssured-BDD
 npm run test:api        # RestAssured @smoke @stockroom against StockRoom
-npm run test:smoke      # Node smoke (CI-friendly mirror)
+npm run test:smoke      # Node smoke (+ history, dashboard, allure-results)
+npm run explore         # bounded exploratory agent
+npm run contract:diff   # OpenAPI snapshot vs current + Pact stub
+npm run dashboard       # rebuild artifacts/dashboard.html
+npm run allure:generate && npm run allure:open
 ```
 
 Walkthrough: [docs/demo.md](docs/demo.md).
@@ -88,11 +99,21 @@ npm run guardrails -- drafts/examples
 and embeds a Bearer token pattern — both fail closed. That failure is the point:
 **QE judgment is encoded in the pipeline**, not left to the model.
 
+## Quality extensions
+
+| Command | Docs |
+|---------|------|
+| `npm run dashboard` | [docs/quality-dashboard.md](docs/quality-dashboard.md) |
+| `npm run explore` | [docs/explore.md](docs/explore.md) |
+| `npm run contract:diff` | [docs/contract-diff.md](docs/contract-diff.md) |
+| `npm run allure:generate` | [docs/allure.md](docs/allure.md) |
+
 ## CI
 
-- **PR / push:** guardrails on `approved/` + release summary artifact
-- **API smoke (optional):** when repo Variable `STOCKROOM_BASE_URL` is set — `npm run test:smoke`
-- **Local RestAssured:** `npm run test:api` syncs `approved/` and runs the Java suite
+- **PR / push:** guardrails on `approved/` + contract diff + release summary
+- **API smoke:** when `STOCKROOM_BASE_URL` is set — smoke, explore, Allure generate
+- **Pages (main):** publishes quality dashboard + Allure to GitHub Pages
+- **Local RestAssured:** `npm run test:api`
 
 ### Wire Vercel AUT smoke (once)
 
@@ -111,7 +132,7 @@ chmod +x scripts/setup-github-ci-env.sh
 ./scripts/setup-github-ci-env.sh
 ```
 
-4. Confirm: Actions → QualForge CI → **StockRoom API smoke** runs on the next push (or `gh workflow run "QualForge CI"`).
+4. Enable **Settings → Pages → Deploy from branch `gh-pages`** (created by CI).
 
 Workflow: [.github/workflows/ci.yml](.github/workflows/ci.yml)
 
@@ -143,31 +164,21 @@ Without a key, `generate` writes a deterministic offline stub so the pipeline st
 QualForge/
 ├── approved/           # Human-reviewed features (CI)
 ├── drafts/             # AI output (not executed)
-├── artifacts/          # OpenAPI snapshot + summaries
+├── artifacts/          # OpenAPI, diffs, dashboard, explore, history
 ├── prompts/            # LLM system prompt
 ├── src/
 │   ├── ingest/         # OpenAPI fetch
 │   ├── generate/       # LLM or stub drafts
 │   ├── guardrails/     # Policy checks
 │   ├── review/         # list + approve
-│   └── summarize/      # Release readiness notes
+│   ├── summarize/      # Release readiness notes
+│   ├── quality/        # History, flaky clustering, dashboard
+│   ├── explore/        # Bounded exploratory agent
+│   └── contract/       # OpenAPI diff + Pact stub
+├── scripts/            # Smoke, sync, CI env setup
 ├── docs/
 └── .github/workflows/
 ```
-
-## 2-week build plan (status)
-
-| Week | Focus | Scaffold status |
-|------|--------|-----------------|
-| 1 | Ingest, generate, guardrails, review, StockRoom-oriented examples | **Done (scaffold)** |
-| 2 | CI, summarize, RestAssured wiring, LLM keys, demo polish | **Done (wired)** |
-
-## What I would add next
-
-- Flaky clustering / quality dashboard
-- Bounded exploratory agent with step caps
-- Pact / OpenAPI diff on contract change
-- Live Allure publish from Actions
 
 ## License
 

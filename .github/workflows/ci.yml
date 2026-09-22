@@ -8,6 +8,9 @@ on:
     - cron: "0 14 * * *"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   guardrails-approved:
     name: Guardrails (approved only)
@@ -22,31 +25,86 @@ jobs:
         run: npm install
       - name: Guardrails on approved/
         run: npm run guardrails -- approved
+      - name: Contract diff (snapshot vs live when available)
+        env:
+          STOCKROOM_BASE_URL: ${{ vars.STOCKROOM_BASE_URL }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: npm run contract:diff
+        continue-on-error: true
       - name: Summarize
         run: npm run summarize
       - name: Upload summary
         uses: actions/upload-artifact@v4
         with:
           name: release-summary
-          path: artifacts/last-summary.md
+          path: |
+            artifacts/last-summary.md
+            artifacts/openapi-diff.md
+            artifacts/openapi-diff.json
+            artifacts/pacts/
+          if-no-files-found: warn
 
   api-smoke:
     name: StockRoom API smoke
     needs: guardrails-approved
     runs-on: ubuntu-latest
-    # Set repo Variable STOCKROOM_BASE_URL (e.g. Vercel AUT URL).
-    # Set secret VERCEL_AUTOMATION_BYPASS_SECRET when the AUT is protection-gated.
     if: ${{ vars.STOCKROOM_BASE_URL != '' }}
     env:
       STOCKROOM_BASE_URL: ${{ vars.STOCKROOM_BASE_URL }}
       VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+      ALLURE_REPORT_URL: https://ashishraj-tyagi.github.io/QualForge/allure/
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
       - name: Install
         run: npm install
-      - name: Smoke (mirrors approved Gherkin)
+      - name: Smoke (+ history, dashboard, allure-results)
         run: npm run test:smoke
+      - name: Bounded explore
+        run: npm run explore
+        env:
+          EXPLORE_MAX_STEPS: "10"
+          EXPLORE_TIMEOUT_MS: "20000"
+      - name: Generate Allure HTML
+        if: always()
+        run: npm run allure:generate
+      - name: Build GitHub Pages bundle
+        if: always() && github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p public-site/allure
+          cp artifacts/dashboard.html public-site/index.html
+          if [ -f artifacts/explore-report.md ]; then cp artifacts/explore-report.md public-site/; fi
+          if [ -f artifacts/quality-report.json ]; then cp artifacts/quality-report.json public-site/; fi
+          if [ -d allure-report ]; then cp -R allure-report/. public-site/allure/; fi
+          printf '%s\n' '<!DOCTYPE html><html><head><meta charset="utf-8"><title>QualForge Reports</title></head><body style="font-family:sans-serif;max-width:40rem;margin:2rem auto;padding:0 1rem">' \
+            '<h1>QualForge reports</h1>' \
+            '<ul><li><a href="./">Quality dashboard</a></li><li><a href="./allure/">Allure report</a></li></ul>' \
+            '</body></html>' > public-site/reports.html
+      - name: Upload quality artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-artifacts
+          path: |
+            artifacts/dashboard.html
+            artifacts/quality-report.json
+            artifacts/history/
+            artifacts/explore-report.md
+            artifacts/explore-report.json
+            allure-results/
+            allure-report/
+          if-no-files-found: warn
+      - name: Publish Allure + dashboard to GitHub Pages
+        if: always() && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public-site
+          force_orphan: true

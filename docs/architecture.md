@@ -24,16 +24,13 @@
 ┌─────────────────┐
 │  approved/      │  only this folder is CI-executable
 └────────┬────────┘
-         │ npm run test:api / GitHub Actions
+         │ npm run test:smoke / test:api / explore
          ▼
-┌─────────────────┐
-│ RestAssured-BDD │  Cucumber + Allure
-└────────┬────────┘
-         │ npm run summarize
-         ▼
-┌─────────────────┐
-│ Release notes   │  artifacts/last-summary.md
-└─────────────────┘
+┌─────────────────────────────────────────────┐
+│ history → dashboard (flaky clusters)        │
+│ allure-results → GitHub Pages Allure report │
+│ contract:diff → openapi-diff + Pact stub    │
+└─────────────────────────────────────────────┘
 ```
 
 ## Design principles
@@ -41,4 +38,5 @@
 1. **AI drafts; humans decide** — nothing in `drafts/` runs in CI.
 2. **Contract-first** — OpenAPI is the allowlist for paths.
 3. **Fail closed** — guardrail errors block `approve`.
-4. **Portfolio triad** — StockRoom (AUT) → QualForge (design gates) → RestAssured-BDD (execution).
+4. **Bounded autonomy** — explore agent has hard step/time caps.
+5. **Portfolio triad** — StockRoom (AUT) → QualForge (design gates) → RestAssured-BDD (execution).
