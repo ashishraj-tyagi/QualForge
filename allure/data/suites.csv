@@ -1,0 +1,4 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","2282","GET /api/health → 200","","2026-09-26","passed","2026-09-26","","StockRoom smoke","",""
+"","155","POST /api/auth locked → 403","","2026-09-26","passed","2026-09-26","","StockRoom smoke","",""
+"","418","POST /api/auth standard → 200 + token","","2026-09-26","passed","2026-09-26","","StockRoom smoke","",""

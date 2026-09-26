@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QualForge Quality Dashboard</title>
+  <style>
+    :root { --bg:#0f1419; --card:#1a2332; --text:#e7ecf3; --muted:#8b9bb4; --ok:#3dd68c; --bad:#f07178; --warn:#ffcc66; --line:#2a3548; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: "IBM Plex Sans", "Segoe UI", sans-serif; background: radial-gradient(1200px 600px at 10% -10%, #1b2a44, var(--bg)); color: var(--text); }
+    main { max-width: 960px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+    h1 { font-size: 1.75rem; margin: 0 0 .25rem; letter-spacing: -0.02em; }
+    .sub { color: var(--muted); margin-bottom: 1.75rem; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.75rem; }
+    @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.1rem; }
+    .metric { font-size: 2rem; font-weight: 650; }
+    .label { color: var(--muted); font-size: .85rem; text-transform: uppercase; letter-spacing: .06em; }
+    h2 { font-size: 1.1rem; margin: 0 0 .75rem; }
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    th, td { text-align: left; padding: .55rem .4rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--muted); font-weight: 560; }
+    .ok { color: var(--ok); } .bad { color: var(--bad); } .warn { color: var(--warn); }
+    code { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: .84em; }
+    .empty { color: var(--muted); font-style: italic; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>QualForge Quality Dashboard</h1>
+  <p class="sub">Flaky detection + failure clustering from recorded smoke / explore runs.</p>
+  <div class="grid">
+    <div class="card"><div class="label">Runs tracked</div><div class="metric">14</div></div>
+    <div class="card"><div class="label">Latest pass rate</div><div class="metric">100%</div></div>
+    <div class="card"><div class="label">Flaky tests</div><div class="metric ok">0</div></div>
+  </div>
+
+  <section class="card" style="margin-bottom:1.25rem">
+    <h2>Latest run</h2>
+    <p><code>smoke</code> · 2026-09-26T08:09:56.414Z · https://stock-room-ashishraj-tyagi.vercel.app</p>
+           <table><thead><tr><th>Case</th><th>Status</th><th>ms</th></tr></thead><tbody>
+           <tr><td>GET /api/health → 200</td><td class="ok">passed</td><td>2282</td></tr><tr><td>POST /api/auth standard → 200 + token</td><td class="ok">passed</td><td>418</td></tr><tr><td>POST /api/auth locked → 403</td><td class="ok">passed</td><td>155</td></tr>
+           </tbody></table>
+  </section>
+
+  <section class="card" style="margin-bottom:1.25rem">
+    <h2>Flaky tests (pass and fail across history)</h2>
+    <p class="empty">No flaky patterns in the last 14 runs.</p>
+  </section>
+
+  <section class="card">
+    <h2>Failure clusters</h2>
+    <p class="empty">No failures to cluster.</p>
+  </section>
+</main>
+</body>
+</html>
