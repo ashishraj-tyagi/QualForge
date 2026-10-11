@@ -1,0 +1,29 @@
+{
+  "startedAt": "2026-09-22T23:06:44.638Z",
+  "source": "smoke",
+  "baseUrl": "https://stock-room-ashishraj-tyagi.vercel.app",
+  "gitSha": "ce7f735185e92ea285f6df0c849c56b68f201da2",
+  "ciRunUrl": "https://github.com/ashishraj-tyagi/QualForge/actions/runs/35795755703",
+  "cases": [
+    {
+      "name": "GET /api/health → 200",
+      "fullName": "StockRoom smoke: GET /api/health → 200",
+      "status": "passed",
+      "durationMs": 1043
+    },
+    {
+      "name": "POST /api/auth standard → 200 + token",
+      "fullName": "StockRoom smoke: POST /api/auth standard → 200 + token",
+      "status": "passed",
+      "durationMs": 371
+    },
+    {
+      "name": "POST /api/auth locked → 403",
+      "fullName": "StockRoom smoke: POST /api/auth locked → 403",
+      "status": "passed",
+      "durationMs": 119
+    }
+  ],
+  "id": "25e64c37-6bc4-4ee8-a344-2697764cba61",
+  "finishedAt": "2026-09-22T23:06:46.172Z"
+}
